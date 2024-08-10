@@ -9,7 +9,7 @@
 }
 
 .buttonUnSelected {
-  @apply w-6 h-6 p-1 bg-gray-500 rounded-full;
+  @apply w-6 h-6 p-1 bg-gray-50 rounded-full;
   transform: translateX(0);
   transition: transform .3s;
   -webkit-user-drag: none;
@@ -20,8 +20,13 @@
   transform: translateX(20px);
   transition: transform .3s;
   -webkit-user-drag: none;
+  fill: azure;
 }
-.hover:hover p {
+
+.buttonSelected img {
+  fill: azure;
+}
+.hover:hover .desktopName {
   opacity: 1;
   transform: translateY(-4px);
 }

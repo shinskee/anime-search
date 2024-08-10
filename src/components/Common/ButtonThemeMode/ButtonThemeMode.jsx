@@ -11,7 +11,7 @@ function ButtonThemeMode() {
     }
     
     return (
-        <button className="flex gap-x-2 bg-gray-300 p-0.5 w-[50px]" onClick={handleClick}>
+        <button className="rounded-2xl flex gap-x-2 bg-gray-300 p-0.5 w-[50px]" onClick={handleClick}>
             <img src={theme === 'light' ? sun : moon} className={ theme === 'light' ? 'buttonUnSelected' : 'buttonSelected' }></img>
 
         </button>

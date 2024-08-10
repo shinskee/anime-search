@@ -1,40 +1,34 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
-import Loading from "../Common/Loading/Loading";
-import {
-  Navigate,
-  NavLink,
-  redirect,
-  redirectDocument,
-  replace,
-  useNavigate,
-} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Pagination } from "@mui/material";
 import Loading2 from "../Common/Loading/Loading2";
 import TitleList from "./TitleList";
 import Search from "../Search/Search";
-import { getSearchTitle } from "../../api/api";
 
-function Test() {
+function SearchNew() {
   const [data, setData] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [pagesCount, setPagesCount] = useState("");
   const [currentPage, setCurrentPage] = useState("");
   const [isInputNull, setIsInputNull] = useState(false);
   const itemsPerPage = 6
+
   useEffect(() => {
+    let id = new URLSearchParams(window.location.search)
     const fetchData = async () => {
-      const result = await axios(
-        `https://api.anilibria.tv/v3/title/updates?items_per_page=6`
-      );
-      setData(result.data);
-      setIsFetching(true);
-      setPagesCount(result.data.pagination.pages);
-      setCurrentPage(result.data.pagination.current_page);
-    };
-    fetchData();
-  }, []);
+        setIsFetching(false)
+        const result = await axios(
+            `https://api.anilibria.tv/v3/title/search?${id}&items_per_page=${itemsPerPage}`
+        )
+        console.log(result.data)
+        setData(result.data)
+        setPagesCount(result.data.pagination.pages);
+        setIsFetching(true)
+    }
+    fetchData()
+}, [])
 
 //   const onPageChanged = (pageNumber) => {
 //     // getTitle(pageNumber, setData, setIsFetching, setCurrentPage)
@@ -60,11 +54,13 @@ function Test() {
     };
     fetchData();
   };
+
   const handleclick = (e, p) => {
+    let id = new URLSearchParams(window.location.search)
     const fetchData = async () => {
       setIsFetching(false);
       const result = await axios(
-        `https://api.anilibria.tv/v3/title/updates?page=${p}&items_per_page=${itemsPerPage}`
+        `https://api.anilibria.tv/v3/title/search?${id}&page=${p}&items_per_page=${itemsPerPage}`
       );
       setData(result.data);
       setIsFetching(true);
@@ -73,18 +69,18 @@ function Test() {
     fetchData();
   };
 
-  const onGenresClicked = (genres) => {
-    const fetchData = async () => {
-        setIsFetching(false)
-        const result = await axios (
-            `https://api.anilibria.tv/v3/title/search?genres=${genres}`
-        )
-        setData(result.data);
-        setPagesCount(result.data.pagination.pages);
-        setIsFetching(true)
-    }
-    fetchData()
-}
+//   const onGenresClicked = (genres) => {
+//     const fetchData = async () => {
+//         setIsFetching(false)
+//         const result = await axios (
+//             `https://api.anilibria.tv/v3/title/search?genres=${genres}`
+//         )
+//         setData(result.data);
+//         setPagesCount(result.data.pagination.pages);
+//         setIsFetching(true)
+//     }
+//     fetchData()
+// }
 
   const handleSearch = (inputValue) => {
     if (inputValue.length > 0) {
@@ -92,7 +88,7 @@ function Test() {
         setIsInputNull(false)
         setIsFetching(false)
         const result = await axios(
-            `https://api.anilibria.tv/v3/title/search?search=${inputValue}`
+            `https://api.anilibria.tv/v3/title/search?search=${inputValue}&items_per_page=${itemsPerPage}`
         )
         setData(result.data)
         setPagesCount(result.data.pagination.pages);
@@ -103,13 +99,13 @@ function Test() {
     } else {
       setIsInputNull(true)
     }
-  }
+}
   
   return (
     <div className="flex flex-col gap-y-8 py-3 h-full justify-between items-center min-h-screen">
       <h1 className="text-5xl text-center row-span-1">Привет</h1>
-      <Search onGenresClicked={onGenresClicked} setIsFetching={setIsFetching} 
-        handleSearch={handleSearch} isInputNull={isInputNull} setIsInputNull={setIsInputNull} />
+      <Search handleSearch={handleSearch} setIsFetching={setIsFetching} 
+         isInputNull={isInputNull} setIsInputNull={setIsInputNull} />
       {isFetching ? <TitleList data={data} isFetching={isFetching} handleClickTitle={handleClickTitle} />
         : <Loading2 itemsPerPage={itemsPerPage} />}
       <Pagination
@@ -122,4 +118,4 @@ function Test() {
   );
 }
 
-export default Test;
+export default SearchNew;

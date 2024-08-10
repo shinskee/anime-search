@@ -3,7 +3,7 @@ import loading from '../../../assets/loading.svg'
 function Loading(props) {
     return ( 
         <div className={props.style}>
-            <img src={loading} alt="" />
+            <img className={props.styleImg} src={loading} />
         </div>
      );
 }

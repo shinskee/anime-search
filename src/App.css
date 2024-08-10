@@ -1,7 +1,9 @@
 #root {
   max-width: 1280px;
+  min-width: 100%;
   margin: 0 auto;
   padding: 2rem;
+  height: 100vh;
   /* text-align: center; */
 }
 
@@ -39,4 +41,22 @@
 
 .read-the-docs {
   color: #888;
+}
+
+.buttonUnSelected {
+  @apply w-6 h-6 p-1 bg-gray-500 rounded-full;
+  transform: translateX(0);
+  transition: transform .3s;
+  -webkit-user-drag: none;
+}
+
+.buttonSelected {
+  @apply w-6 h-6 bg-gray-500 rounded-full p-1;
+  transform: translateX(20px);
+  transition: transform .3s;
+  -webkit-user-drag: none;
+}
+.hover:hover p {
+  opacity: 1;
+  transform: translateY(-4px);
 }

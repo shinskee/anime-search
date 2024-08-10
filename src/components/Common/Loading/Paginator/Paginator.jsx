@@ -47,7 +47,7 @@ function Paginator({pagesCount, onPageChanged, currentPage}) {
           onClick={() => {
             setPortionNumber(portionNumber + 1);
           }}
-          className="w-5 h-5 cursor-pointer select-none"
+          className="w-5 h-5 cursor-pointer select-none dark:fill-gray-200 fill-gray-950"
         />
       )}
     </div>

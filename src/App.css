@@ -1,9 +1,10 @@
 #root {
+  @apply max-sm:p-2 p-5;
+
   max-width: 1280px;
   min-width: 100%;
   margin: 0 auto;
-  padding: 2rem;
-  height: 100vh;
+  /* height: 100vh; */
   /* text-align: center; */
 }
 

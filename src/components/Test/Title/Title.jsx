@@ -1,12 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import Loading from "../../Common/Loading/Loading";
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink, useNavigate } from "react-router-dom";
 
 function Title() {
     const [data, setData] = useState([])
     const [isFetching, setIsFetching] = useState(false)
-
+    const navigate = useNavigate()
     useEffect(() => {
         let id = new URLSearchParams(window.location.search)
         const fetchData = async () => {
@@ -22,9 +22,7 @@ function Title() {
 
     return ( 
         <div>
-            <NavLink to="/">
-                Назад
-            </NavLink>
+            <a onClick={() => {navigate(-1)}}>Назад</a>
             {isFetching 
                 ? <div>
                     <img className="w-40" src={`https://anilibria.top${data.posters.small.url}`} alt="" />

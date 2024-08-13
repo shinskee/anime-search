@@ -7,7 +7,11 @@ function Header() {
     return ( 
         <div className="flex items-center gap-x-2">
             <ButtonThemeMode />
-            <NavLink to={'/'}>Главная</NavLink>
+            <a onClick={() => {navigate('/anime-search/')
+                navigate(0)
+            }}>Главная</a>
+            <a onClick={() => {navigate(-1)}}>Назад</a>
+            <a onClick={() => {navigate(+1)}}>Вперед</a>
         </div>
         
      );

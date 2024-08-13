@@ -1,12 +1,19 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { Button, TextField } from "@mui/material";
+import FilterGenres from "./FilterGenres";
+import FilterYear from "./FilterYear";
+import { filterApi } from "../../api/api";
 
-function Search({handleSearch, isInputNull, setIsInputNull}) {
+
+function Search({handleSearch, setIsInputNull}) {
     const [inputV, setInputV] = useState('')
     const [genres, setGenres] = useState('')
-    const [isFetching, setIsFetching] = useState(false)
-    const [isActive, setIsActive] = useState(false)
+    const [year, setYear] = useState("")
+    const [yearValue, setYearValue] = useState("")
+    const [isFetching, setIsFetching] = useState({genres: false, year: false})
+    const [genresValue, setGenresValue] = useState([])
+    const [open, setOpen] = useState({genres: false, year: false})
+
     const onChangeInput = (e) => {
         setInputV(e.target.value)
         if (inputV.length === 1) {
@@ -15,48 +22,52 @@ function Search({handleSearch, isInputNull, setIsInputNull}) {
             setIsInputNull(false)
         }
     }
-    const navigate = useNavigate()
-    const onGetGenres = () => {
-        const fetchData = async () => {
-            setIsFetching(false)
-            const result = await axios (
-                `https://api.anilibria.tv/v3/genres`
-            )
-            setGenres(result.data)
-            setIsFetching(true)
+
+    const handleChange = (e) => {
+        setGenresValue(e.target.value)
+    }
+    const handleOpen = () => {
+        if (genres.length === 0) {
+            filterApi.getGenres(setIsFetching, setGenres, setOpen, open, isFetching) 
+        } else {
+            setOpen({...open, genres: true})
         }
-        fetchData()
-        setIsActive(!isActive)
+    }
+    const handleClose = () => {
+        setOpen({...open, genres: false})
     }
 
-    const onCloseGenres = () => {
-        setIsActive(false)
+    const handleOpenYear = () => {
+        if (year.length === 0) {
+            filterApi.getYear(setIsFetching, setYear, setOpen, open, isFetching)
+        } else {
+            setOpen({...open, year: true})
+        }
     }
 
-    const onGenresClicked = () => {
-        const fetchData = async () => {
-            setIsFetching(false)
-            const result = await axios (
-                `https://api.anilibria.tv/v3/genres`
-            )
-            setGenres(result.data)
-            setIsFetching(true)
-        }
-        fetchData()
-        setIsActive(!isActive)
+    const handleCloseYear = () => {
+        setOpen({...open, year: false})
     }
-    
+
+    const handleChangeYear = (e) => {
+        setYearValue(e.target.value)
+    }
+
     return ( 
-        <div className="flex gap-x-2 w-full max-sm:overflow-x-hidden">
-            <input maxLength={180} onChange={onChangeInput} value={inputV} className={isInputNull ? `border border-red-700 rounded h-8 px-2 w-full` : `border rounded h-8 px-2 w-full`} type="text" name="search" placeholder="введите название" id="" />
-            <button onClick={() => handleSearch(inputV)} className="text-gray-800">Поиск</button>
-            <button onClick={() => {navigate(0, { replace: true })}} className="text-gray-800">Сбросить</button>
-            <button onClick={onGetGenres} className="text-gray-800 z-10">=</button>
-            <div className={isActive ? "z-10 max-sm:translate-x-0 max-sm:absolute max-sm:right-0 transition-all bg-gray-100 p-5 rounded" : "z-10 max-sm:translate-x-full max-sm:absolute max-sm:right-0 transition-all"}>
-                <button onClick={onCloseGenres}>X</button>
-                {isFetching && genres.map((g, index) => (<div onClick={onGenresClicked} key={index}>{g}</div>))}
+        <div className="flex flex-col gap-x-2 w-full max-sm:overflow-x-hidden gap-y-3">
+            <div className="flex items-center gap-x-3 pt-2">
+                <TextField
+                    fullWidth 
+                    id="input-search" 
+                    label='Введите название'
+                    value={inputV}
+                    onChange={onChangeInput} ></TextField>
+                <Button onClick={() => handleSearch(inputV, genresValue, yearValue)} id="input-search" variant="outlined" >Поиск</Button>
             </div>
-            {/* <TitleList handleClickTitle={handleClickTitle} data={data} /> */}
+            <FilterGenres handleOpen={handleOpen} handleClose={handleClose} 
+                genresValue={genresValue} handleChange={handleChange} open={open.genres} genres={genres} isFetching={isFetching.genres} />
+            <FilterYear handleOpenYear={handleOpenYear} handleCloseYear={handleCloseYear}
+                yearValue={yearValue} handleChangeYear={handleChangeYear} openYear={open.year} year={year} isFetching={isFetching.year} />
         </div>
      );
 }

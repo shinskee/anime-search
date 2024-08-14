@@ -2,10 +2,14 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Loading from "../../Common/Loading/Loading";
 import { Navigate, NavLink, useNavigate } from "react-router-dom";
+import ReactPlayer from "react-player";
+import { FormControl, InputLabel, MenuItem, Select } from "@mui/material";
 
 function Title() {
     const [data, setData] = useState([])
     const [isFetching, setIsFetching] = useState(false)
+    const [valueEpisodes, setValueEpisodes] = useState('')
+    const [valueUrl, setValueUrl] = useState('')
     const navigate = useNavigate()
     useEffect(() => {
         let id = new URLSearchParams(window.location.search)
@@ -15,11 +19,19 @@ function Title() {
             )
             console.log(result.data.id)
             setData(result.data)
+            console.log(Object.values(result.data.player.list));
+            
             setIsFetching(true)
         }
         fetchData()
     }, [])
 
+    const handleChangeEpisodes = (e) => {
+        setValueEpisodes(e.target.value) 
+    }
+    const onClickEpisode = (url) => {
+        setValueUrl(url);
+    }
     return ( 
         <div>
             <a onClick={() => {navigate(-1)}}>Назад</a>
@@ -31,6 +43,25 @@ function Title() {
                     <p>Описание: {data.description}</p>
                 </div>
                 : <Loading />}
+                <FormControl className="w-full">
+                <InputLabel id="open-select-episodes">Серия</InputLabel>
+                <Select
+                    className="w-full"
+                    labelId="open-select-episodes"
+                    id="open-select-episodes"
+                    value={valueEpisodes}
+                    onChange={handleChangeEpisodes}
+                    label="Episodes"
+                >
+                    {isFetching &&
+                        Object.values(data.player.list).map((e, index) => (
+                            <MenuItem value={e.episode} key={index} onClick={() => onClickEpisode(e.hls.hd)}>
+                                {e.episode}
+                            </MenuItem>
+                    ))}
+                </Select>
+                </FormControl>
+                <ReactPlayer width={'100%'} height={"100%"} url={`https://cache.libria.fun${valueUrl}`} controls />
         </div>
      );
 }

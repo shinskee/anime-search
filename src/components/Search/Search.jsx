@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import FilterGenres from "./FilterGenres";
 import FilterYear from "./FilterYear";
-import { filterApi } from "../../api/api";
+import { filterApi } from "../../api/api2";
 
 
 function Search({handleSearch, setIsInputNull}) {

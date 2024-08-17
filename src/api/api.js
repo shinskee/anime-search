@@ -1,46 +1,34 @@
-import axios from "axios"
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const BASE_URL = 'https://api.anilibria.tv/v3'
+// Define a service using a base URL and expected endpoints
+export const api = createApi({
+  reducerPath: "api",
+  baseQuery: fetchBaseQuery({ baseUrl: "https://api.anilibria.tv/v3/" }),
+  endpoints: (builder) => ({
+    getTitleUpdates: builder.query({
+      query: () => `title/updates?limit=20`,
+    }),
+    getAnimeTitle: builder.query({
+      query: (id) => `title?id=${id}`,
+    }),
+    getPopularTitle: builder.query({
+      query: ({page, itemPage}) => `title/search/advanced?query={type.code}%20==%201&order_by=in_favorites&filter=posters,id,type,id,names,in_favorites&sort_direction=1&items_per_page=${itemPage}&page=${page}`,
+    }),
+    // getPopularPagination: builder.query({
+    //   query: () => `title/search/advanced?query={type.code}%20==%201&order_by=in_favorites&filter=posters,id,type,id,names,in_favorites&sort_direction=1`,
+    // }),
+    getGenres: builder.query({
+      query: () => `genres`,
+    }),
+    getSearch: builder.query({
+      query: ({genres, year, page, itemPerPage, search, type}) => `title/search${type ? `?type=${type}&` : `?`}search=${search}&genres=${genres}&year=${year}&items_per_page=${itemPerPage}&${page && `page=${page}`}`,
+    }),
+    getPaginationPages: builder.query({
+      query: ({genres, year, itemPerPage, search, type}) => `title/search${type ? `?type=${type}&` : `?`}search=${search}&genres=${genres}&year=${year}&items_per_page=${itemPerPage}`,
+    }),
+  }),
+});
 
-export const getTitle = async (pageNumber, setData, setIsFetching, setCurrentPage) => {
-    setIsFetching(false)
-    const result = await axios(
-        `https://api.anilibria.tv/v3/title/updates?page=${pageNumber}`
-    )
-    setData(result.data)
-    setIsFetching(true)
-    setCurrentPage(result.data.pagination.current_page)
-}
-
-export const getSearchTitle = async (searchValue, setData, setIsFetching) => {
-    setIsFetching(false)
-    const result = await axios(
-        `https://api.anilibria.tv/v3/title/search?search=${searchValue}`
-    )
-}
-
-export const filterApi = {
-    getYear: async (setIsFetching, setYear, setOpen, open, isFetching) => {
-        setIsFetching({...isFetching, year: false})
-        const result = await axios.get(`${BASE_URL}/years`)
-        setYear(result.data)
-        setIsFetching({...isFetching, year: true})
-        setOpen({...open, year: true})
-    },
-    getGenres: async (setIsFetching, setGenres, setOpen, open, isFetching) => {
-        setIsFetching({...isFetching, genres: false})
-        const result = await axios.get(`${BASE_URL}/genres`)
-        setGenres(result.data)
-        setIsFetching({...isFetching, genres: true})
-        setOpen({...open, genres: true})
-    },
-    getTitleUpdates: async (setIsFetching, setData, setPagesCount, setIsLoading, setCurrentPage) => {
-        setIsFetching(false)
-        const result = await axios.get(`${BASE_URL}/title/updates?items_per_page=6`)
-        setData(result.data)
-        setPagesCount(result.data.pagination.pages);
-        setIsLoading(false)
-        setIsFetching(true)
-        setCurrentPage(result.data.pagination.current_page)
-    }
-}
+// Export hooks for usage in functional components, which are
+// auto-generated based on the defined endpoints
+export const { useGetTitleUpdatesQuery, useGetAnimeTitleQuery, useGetPaginationPagesQuery, useGetPopularTitleQuery, useGetGenresQuery, useGetSearchQuery } = api;

@@ -6,7 +6,7 @@ import { Pagination } from "@mui/material";
 import Loading2 from "../../Common/Loading/Loading2";
 import Search from "../../Search/Search";
 import TitleList from "../../Test/TitleList";
-import { filterApi } from "../../../api/api";
+import { filterApi } from "../../../api/api2";
 
 function SearchPage() {
   const [data, setData] = useState([]);
@@ -50,7 +50,7 @@ useEffect(() => {
   const handleClickTitle = (id) => {
     setMainData(false)
     const fetchData = async () => {
-      navigate(`/anime-search/title/?id=${id}`);
+      navigate(`/title/?id=${id}`);
     };
     fetchData();
   };

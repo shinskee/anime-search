@@ -56,7 +56,7 @@ function Test() {
     const fetchData = async () => {
       const result = await axios(`https://api.anilibria.tv/v3/title?id=${id}`);
       console.log(result.data.id);
-      navigate(`/anime-search/title/?id=${result.data.id}`);
+      navigate(`/title/?id=${result.data.id}`);
     };
     fetchData();
   };
@@ -97,7 +97,7 @@ function Test() {
         setData(result.data)
         setPagesCount(result.data.pagination.pages);
         setIsFetching(true)
-        navigate(`/anime-search/search?search=${inputValue}`);
+        navigate(`/search?search=${inputValue}`);
       };
       fetchData();
     } else {

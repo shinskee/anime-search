@@ -1,0 +1,29 @@
+.active {
+    position: relative;
+    color: white;
+    text-decoration: none;
+    transition: all .3s;
+}
+
+
+.active:after {
+    bottom: -7px;
+    left: 0;
+    translate: 50%;
+    position: absolute;
+    content: "";
+    width: 50%;
+    border-radius: 2px;
+    border-bottom: 3px solid white;
+    text-decoration: none;
+}
+
+.default {
+    color: gray;
+    text-decoration: none;
+    transition: all .3s;
+}
+
+.default:hover {
+    color: white;
+}

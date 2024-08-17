@@ -1,20 +1,14 @@
-import { NavLink, useNavigate } from "react-router-dom";
-import ButtonThemeMode from "../Common/ButtonThemeMode/ButtonThemeMode";
+import { useNavigate, Link as RouterLink } from "react-router-dom";
+import { AppBar, Link, Typography } from "@mui/material";
 
 function Header() {
-    const navigate = useNavigate()
-    
-    return ( 
-        <div className="flex items-center gap-x-2">
-            <ButtonThemeMode />
-            <a onClick={() => {navigate('/anime-search/')
-                navigate(0)
-            }}>Главная</a>
-            <a onClick={() => {navigate(-1)}}>Назад</a>
-            <a onClick={() => {navigate(+1)}}>Вперед</a>
-        </div>
-        
-     );
+  return (
+    <AppBar sx={{ paddingInline: 2 }}>
+      <Typography component={RouterLink} sx={{color: 'white', textDecoration: 'none'}} to={'/'} variant="h5" fontWeight={"bold"}>
+        Anime Search
+      </Typography>
+    </AppBar>
+  );
 }
 
 export default Header;

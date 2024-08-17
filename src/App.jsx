@@ -1,27 +1,80 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import './App.css'
-import Test from './components/Test/Test'
-import Title from './components/Test/Title/Title'
-import { ThemeProvider } from './Theme'
-import Header from './components/Header/Header'
-import SearchPage from './components/Pages/SearchPage/SearchPage'
-import MainPage from './components/Pages/MainPage/MainPage'
+import "./App.css";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Layout from "./components/Layout";
+import MainPage from "./components/Pages/MainPage/MainPage";
+import AnimeTitle from "./components/Pages/AnimeTitle/AnimeTitle";
+import { createTheme, CssBaseline, ThemeProvider } from "@mui/material";
+import { red } from "@mui/material/colors";
+import Films from "./components/Pages/Films/Films";
+import Serials from "./components/Pages/Serials/Serials";
+import AnimeSearch from "./components/Pages/AnimeSearch/AnimeSearch";
+import Popular from "./components/ui/Popular/Popular";
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Layout />,
+    children: [
+    {
+      path: "/",
+      element: <MainPage />
+    }, 
+    {
+      path: "/title/:id",
+      element: <AnimeTitle />
+    },
+    {
+      path: "/films",
+      element: <Films />
+    },
+    {
+      path: "/serials",
+      element: <Serials />
+    },
+    {
+      path: "/searcher",
+      element: <AnimeSearch />
+    },
+    {
+      path: "/popular",
+      element: <Popular/>
+    },
+    
+  ]
+  },
+]);
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+    primary: {
+      main: red[900]
+    },
+    background: {
+      paper: '#242424',
+      default: '#242424'
+    },
+  },
+  
+});
 
 function App() {
-  
-
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <Header />
-        <Routes>
-          <Route path="/anime-search/" element={<MainPage />} />
-          <Route path="/anime-search/title" element={<Title />} />
-          <Route path="/anime-search/search/*" element={<SearchPage />} />
-        </Routes>
-      </ThemeProvider>
-    </BrowserRouter>
-  )
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <RouterProvider router={router} />
+    </ThemeProvider>
+    // <BrowserRouter>
+    //   <ThemeProvider>
+    //     <Header />
+    //     <Routes>
+    //       <Route path="/" element={<MainPage />} />
+    //       <Route path="/title" element={<Title />} />
+    //       <Route path="/search/*" element={<SearchPage />} />
+    //     </Routes>
+    //   </ThemeProvider>
+    // </BrowserRouter>
+  );
 }
 
-export default App
+export default App;

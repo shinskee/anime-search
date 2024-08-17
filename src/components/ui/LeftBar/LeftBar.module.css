@@ -1,0 +1,42 @@
+.genres {
+    position: relative;
+    cursor: pointer;
+    transition: all .3s;
+    color: white;
+    text-decoration: none;
+}
+
+.genres::after {
+    transition: all .3s;
+}
+
+.genres:hover::after {
+    bottom: 0;
+    right: -5px;
+    position: absolute;
+    content: "";
+    height: 100%;
+    color: red;
+    border-right: 5px solid red;
+    transition: all .3s;
+}
+
+.genres:hover{
+    color: red;
+}
+.active {
+    position: relative;
+    color: red;
+    cursor: pointer;
+}
+.active::after {
+    bottom: 0;
+    right: -5px;
+    position: absolute;
+    content: "";
+    height: 100%;
+    color: red;
+    border-right: 5px solid red;
+    transition: all .3s;
+}
+

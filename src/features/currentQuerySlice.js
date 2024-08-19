@@ -6,10 +6,10 @@ const initialState = {
     quality: '',
     search: '',
     year: '',
-    genres: '',
+    genres: [],
     currentPage: '',
     itemPerPage: 20,
-    type: ''
+    type: '',
 }
 
 export const currentQuerySlice = createSlice({
@@ -31,10 +31,13 @@ export const currentQuerySlice = createSlice({
     }),
     resetQuery: () => ({
       ...initialState
-    })
+    }),
+    genresChecked: (state, action) => {
+        state.genres = action.payload
+    },
   },
 })
 
-export const { changeId, changeEpisode, changeQuality, searchAnime, resetQuery } = currentQuerySlice.actions
+export const { changeId, changeEpisode, changeQuality, searchAnime, resetQuery, genresChecked } = currentQuerySlice.actions
 
 export default currentQuerySlice.reducer

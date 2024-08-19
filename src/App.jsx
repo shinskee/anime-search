@@ -8,9 +8,12 @@ import { red } from "@mui/material/colors";
 import Films from "./components/Pages/Films/Films";
 import Serials from "./components/Pages/Serials/Serials";
 import AnimeSearch from "./components/Pages/AnimeSearch/AnimeSearch";
-import Popular from "./components/ui/Popular/Popular";
+import { lazy, Suspense } from "react";
+// import Popular from "./components/ui/Popular/Popular";
+const Popular = lazy(() => import("./components/ui/Popular/Popular"));
 
-const router = createBrowserRouter([
+
+const routes = [
   {
     path: "/",
     element: <Layout />,
@@ -37,26 +40,36 @@ const router = createBrowserRouter([
     },
     {
       path: "/popular",
-      element: <Popular/>
+      element: <Suspense fallback={<div>Loading...</div>}>
+      <Popular />
+    </Suspense>
     },
     
   ]
   },
-]);
+]
+const router = createBrowserRouter(routes, {basename: '/anime-search/'});
 
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
     primary: {
-      main: red[900]
+      main: '#f5f5f5',
+    },
+    secondary: {
+      main: '#d68c89',
     },
     background: {
+      default: '#242424',
       paper: '#242424',
-      default: '#242424'
     },
+    error: {
+      main: '#c00000',
+    },
+    divider: 'rgba(0,0,0,0.12)',
   },
-  
 });
+
 
 function App() {
   return (

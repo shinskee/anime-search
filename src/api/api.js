@@ -24,7 +24,7 @@ export const api = createApi({
       query: ({genres, year, page, itemPerPage, search, type}) => `title/search${type ? `?type=${type}&` : `?`}search=${search}&genres=${genres}&year=${year}&items_per_page=${itemPerPage}&${page && `page=${page}`}`,
     }),
     getPaginationPages: builder.query({
-      query: ({genres, year, itemPerPage, search, type}) => `title/search${type ? `?type=${type}&` : `?`}search=${search}&genres=${genres}&year=${year}&items_per_page=${itemPerPage}`,
+      query: ({genres, year, itemPerPage, search, type}) => `title/search${type ? `?type=${type}&` : `?`}search=${search}&genres=${genres.join(',')}&year=${year}&items_per_page=${itemPerPage}`,
     }),
   }),
 });

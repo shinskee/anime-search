@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack, Typography, Paper, Box } from "@mui/material";
 import { useGetTitleUpdatesQuery } from "../../../api/api";
 import BearCarousel, { BearSlideCard } from "bear-react-carousel";
 import { Link } from "react-router-dom";
@@ -11,7 +11,8 @@ function Hero() {
   const dataCarousel = data.list.map((row) => {
     return (
       <Stack sx={{textDecoration: 'none', color: 'var(--color)'}} height={'350px'} component={Link} to={`/title/${row.id}`}>
-        <Stack
+        <Paper
+          elevation={5}
           component={BearSlideCard}
           borderRadius={"10px"}
           key={row.id}
@@ -34,17 +35,19 @@ function Hero() {
             height={"100%"}
             justifyContent={"center"}
           >
-            <Typography mb={1} variant="h4" fontWeight={"bold"}>
-              {row.names.ru}
-            </Typography>
-            <Typography variant="h5" mb={1} color={"gray"}>
+            
+              <Typography mb={1} variant={'h5'} fontWeight={"bold"}>
+                {row.names.ru}
+              </Typography>
+            
+            <Typography variant="body2" mb={1} color={"gray"}>
               {row.type.full_string}
             </Typography>
             <Typography width={"40%"} height={"15px"} color={"gray"}>
               {row.description}
             </Typography>
           </Stack>
-        </Stack>
+        </Paper>
       </Stack>
     );
   });
@@ -52,7 +55,7 @@ function Hero() {
   return (
     <>
       <BearCarousel
-        height="450px"
+        height="400px"
         data={dataCarousel}
         mb={4}
         isEnableMouseMove

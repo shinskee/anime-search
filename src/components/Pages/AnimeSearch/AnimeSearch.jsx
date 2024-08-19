@@ -5,6 +5,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { searchAnime } from "../../../features/currentQuerySlice";
 import Card from "../../ui/Card/Card";
+import SkeletonAnimeSearchPage from "../../ui/SkeletonAnime/SkeletonAnimeSearchPage";
 
 
 function AnimeSearch() {
@@ -16,12 +17,12 @@ function AnimeSearch() {
         setPage(value);
       };
         if (error || paginationApi.error ) return <div>Ошибка</div>
-        if (isLoading || paginationApi.isLoading ) return <div>Загрузка...</div>
+        if (isLoading || paginationApi.isLoading ) return <SkeletonAnimeSearchPage />
         let pageCount = paginationApi.data.pagination.pages
         
     return ( 
         <Stack height={'100%'} display={'flex'} flexDirection={'column'} columnGap={'20px'} justifyContent={'space-between'}>
-            <Stack mb={2} display={'flex'} flexDirection={'row'} flexWrap={'wrap'} columnGap={'20px'} rowGap={'20px'}> 
+            <Stack mb={2} display={'flex'} flexDirection={'row'} flexWrap={'wrap'} justifyContent={'center'} columnGap={'20px'} rowGap={'20px'}> 
                 {data.list.map(i => (
                     <Card key={i.id} i={i} width={'167px'} height={'238px'} />
                 ))}

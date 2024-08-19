@@ -1,9 +1,11 @@
-import { Button, FormControl, Stack, Link, TextField } from "@mui/material";
-import { NavLink, useNavigate } from "react-router-dom";
+import { Button, FormControl, Stack, Link, TextField, Box, Typography, Icon, IconButton, InputLabel } from "@mui/material";
+import { NavLink, useNavigate, Link as RouterLink } from "react-router-dom";
 import styles from "./Tabs.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import { searchAnime } from "../../../features/currentQuerySlice";
+import logo from "../../../assets/logo.png";
+import SearchIcon from '@mui/icons-material/Search';
 
 function Tabs() {
   const dispatch = useDispatch()
@@ -12,8 +14,12 @@ function Tabs() {
   
   const [searchValue, setSearchValue] = useState('')
   const searchClick = () => {
-    dispatch(searchAnime({search: searchValue}))
-    navigate('/searcher')
+    if (searchValue.length > 0) {
+      dispatch(searchAnime({search: searchValue}))
+      navigate('/searcher')
+      setSearchValue('')
+    }
+    return
   }
   const animeClick = () => {
     dispatch(searchAnime({type: [1]}))
@@ -34,22 +40,43 @@ function Tabs() {
       alignItems={'center'}
     >
       <Stack flexDirection={"row"} columnGap={2}>
-        <NavLink onClick={filmClick} className={type === 0 ? styles.active : styles.default}
-          to={"/searcher"}
-        >
-          Фильмы
-        </NavLink >
+        <Box display={{xs: 'block', sm: 'none'}}>
+        <Link
+        onClick={() => dispatch(resetQuery())}
+        margin={"0 auto"}
+        sx={{
+          display: "flex",
+          textDecoration: "none",
+          color: "white",
+          alignItems: "center",
+          columnGap: "10px",
+        }}
+        component={RouterLink}
+        to={"/"}
+      >
+        <img width={"30px"} height={"30px"} src={logo} alt="logo" />
+      </Link>
+        </Box>
+        <Box display={{xs: 'none', sm: 'flex'}} columnGap={'10px'}>
+          <NavLink onClick={filmClick} className={type === 0 ? styles.active : styles.default}
+            to={"/searcher"}
+          >
+            Фильмы
+          </NavLink >
         <NavLink onClick={animeClick} className={type === 1 ? styles.active : styles.default}
           to={"/searcher"}
         >
           Сериалы
         </NavLink>
+        </Box>
       </Stack>
-      <Stack display={'flex'} flexDirection={'row'} columnGap={2}>
+      <Stack display={'flex'} flexDirection={'row'}>
         <FormControl>
-          <TextField size="small" value={searchValue} onChange={(e) => {setSearchValue(e.target.value)}}></TextField>
+          <TextField placeholder="Введите название" size="small" value={searchValue} onChange={(e) => {setSearchValue(e.target.value)}}></TextField>
         </FormControl>
-        <Button onClick={searchClick}>Поиск</Button>
+        <IconButton onClick={searchClick}>
+          <SearchIcon />
+        </IconButton>
       </Stack>
     </Stack>
   );

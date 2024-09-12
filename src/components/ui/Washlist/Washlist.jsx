@@ -15,9 +15,7 @@ function Washlist() {
     useEffect(() => {
         if (user.uid) {
             getData(user.uid).then((data) => {
-                setWashlist(data)
-                console.log(data, "data");
-                
+                setWashlist(data)    
             }).catch((error) => {
                 console.log(error, "error")
             }).finally(() => {

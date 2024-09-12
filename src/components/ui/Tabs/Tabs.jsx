@@ -83,13 +83,11 @@ function Tabs() {
         >
           Сериалы
         </NavLink>
+        </Box>
         {user && (
           <div>
-            User Auth
-            <NavLink to={"/washlist"}>
-              Избранное
-            </NavLink>
-            <NavLink onClick={logout}>
+            {user.displayName}
+            <NavLink style={{paddingLeft: "10px"}} onClick={logout}>
               Выйти
             </NavLink>
           </div>
@@ -99,7 +97,6 @@ function Tabs() {
             Войти
           </NavLink>
         )}
-        </Box>
       </Stack>
       <Stack display={'flex'} flexDirection={'row'}>
         <FormControl>

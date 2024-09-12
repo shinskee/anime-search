@@ -2,29 +2,31 @@ import { Box, Paper, Stack, Typography } from "@mui/material";
 import { useGetPopularTitleQuery, useGetTitleUpdatesQuery } from "../../../api/api";
 import BearCarousel, { BearSlideImage } from 'bear-react-carousel';
 import { Link } from "react-router-dom";
-import Popular from "../../ui/Popular/Popular";
 import styles from './MainPage.module.css'
-import Hero from "../../ui/Hero/Hero";
-import HeroVideo from "./HeroVideo";
-import SkeletonAnimeTitle from "../../ui/SkeletonAnime/SkeletonAnimeTitle";
 import SkeletonAnimeMainPage from "../../ui/SkeletonAnime/SkeletonAnimeMainPage";
+import { useAuth } from "../../../features/useAuth";
+import Washlist from "../../ui/Washlist/Washlist";
 
 function MainPage() {
+    const { user } = useAuth()
     const { data, error, isLoading } = useGetTitleUpdatesQuery()
     const popularData = useGetPopularTitleQuery({
         page: 1,
         itemPage: 20,
-      })
+      })  
 
     if (error || popularData.error) return <div>Ошибка</div>
     if (isLoading || popularData.isLoading) return <SkeletonAnimeMainPage />
     const carouselData = data.list.map(row => {
-        return <Stack sx={{textDecoration: 'none', color: 'var(--color)'}} component={Link} to={`/title/${row.id}`}>
-            <Paper elevation={3} component={BearSlideImage} className={styles.slide} imageUrl={`https://anilibria.top${row.posters.small.url}`} key={row.id}>
-            </Paper>
+        return <Stack >
+            <Stack sx={{textDecoration: 'none', color: 'var(--color)'}} component={Link} to={`/title/${row.id}`}>
+                <Paper elevation={3} component={BearSlideImage} className={styles.slide} imageUrl={`https://anilibria.top${row.posters.small.url}`} key={row.id}>
+                </Paper>
+            </Stack>
             <Typography variant="h7">{row.names.ru}</Typography>
         </Stack>
     });
+    
     const carouselPopularData = popularData.data.list.map(row => {
         return <Stack sx={{textDecoration: 'none', color: 'var(--color)'}} component={Link} to={`/title/${row.id}`}>
             <Paper elevation={3} component={BearSlideImage} className={styles.slide} imageUrl={`https://anilibria.top${row.posters.small.url}`} key={row.id}>
@@ -77,6 +79,11 @@ function MainPage() {
                     }}
                     
                 />
+            </Box>
+            <Box>
+                {user && (
+                    <Washlist />
+                )}
             </Box>
         </Stack>
      );

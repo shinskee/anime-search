@@ -2,17 +2,31 @@ import { Button, FormControl, Stack, Link, TextField, Box, Typography, Icon, Ico
 import { NavLink, useNavigate, Link as RouterLink } from "react-router-dom";
 import styles from "./Tabs.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { searchAnime } from "../../../features/currentQuerySlice";
 import logo from "../../../assets/logo.png";
 import SearchIcon from '@mui/icons-material/Search';
+import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/clerk-react";
+import { useAuth } from "../../../features/useAuth";
 
 function Tabs() {
+  const { user, signInWithGoogle, logout } = useAuth()
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const [type] = useSelector(state => state.currentQuery.type)
-  
   const [searchValue, setSearchValue] = useState('')
+  
+  const onGoogleLogin = async () => {
+    try {
+      await signInWithGoogle()
+      console.log('success');
+      
+    } catch (error) {
+      console.log('err', error);
+      
+    }
+  }
+  
   const searchClick = () => {
     if (searchValue.length > 0) {
       dispatch(searchAnime({search: searchValue}))
@@ -53,6 +67,7 @@ function Tabs() {
         }}
         component={RouterLink}
         to={"/"}
+        className={styles.logo}
       >
         <img width={"30px"} height={"30px"} src={logo} alt="logo" />
       </Link>
@@ -68,6 +83,22 @@ function Tabs() {
         >
           Сериалы
         </NavLink>
+        {user && (
+          <div>
+            User Auth
+            <NavLink to={"/washlist"}>
+              Избранное
+            </NavLink>
+            <NavLink onClick={logout}>
+              Выйти
+            </NavLink>
+          </div>
+        )}
+        {!user && (
+          <NavLink onClick={onGoogleLogin}>
+            Войти
+          </NavLink>
+        )}
         </Box>
       </Stack>
       <Stack display={'flex'} flexDirection={'row'}>

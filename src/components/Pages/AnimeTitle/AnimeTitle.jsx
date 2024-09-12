@@ -3,27 +3,35 @@ import { useGetAnimeTitleQuery } from "../../../api/api";
 import { Link as RouterLink } from "react-router-dom";
 import {
   Box,
+  Button,
   FormControl,
   InputLabel,
   List,
   ListItemText,
   MenuItem,
   Select,
+  Snackbar,
   Stack,
   Typography,
 } from "@mui/material";
 import ReactPlayer from "react-player";
 import { useEffect, useState } from "react";
 import SkeletonAnimeTitle from "../../ui/SkeletonAnime/SkeletonAnimeTitle";
+import { useAuth } from "../../../features/useAuth";
+import { useFirestore } from "../../../services/firestore";
 
 function AnimeTitle() {
+  const { user } = useAuth()
   const id = useParams();
   const { data, error, isLoading } = useGetAnimeTitleQuery(id.id);
   const [videoUrl, setVideoUrl] = useState("");
+  const [openLoginAlert, setOpenLoginAlert] = useState(false);
   const [quality, setQuality] = useState("");
   const [episode, setEpisode] = useState("");
   const [qualityData, setQualityData] = useState("");
-
+  const [isWashlist, setIsWashlist] = useState(false)
+  const { addToWashList, chekIfInWashList, removeFromWashList } = useFirestore()
+  
   useEffect(() => {
     if (quality === "480p") {
       setVideoUrl(qualityData.sd);
@@ -35,6 +43,49 @@ function AnimeTitle() {
       setVideoUrl(qualityData.hd);
     }
   }, [quality, episode]);
+  useEffect(() => {
+      if (!user) {
+        setIsWashlist(false)
+          return
+      }
+
+      chekIfInWashList(user.uid, id.id).then((data) => {
+        setIsWashlist(data)
+      })
+      // console.log(das)      
+  }, [id, user, chekIfInWashList])
+
+  const onSaveToWashlist = async (animeData) => {
+    const data = {
+      id: animeData.id,
+      title: animeData.names.ru,
+      poster: `https://anilibria.top${animeData.posters.small.url}`
+  }
+
+  const dataId = String(animeData.id)
+
+  // addDocument("washlist", data)
+  await addToWashList(user.uid, dataId, data)
+  const isSetToWashlist =  await chekIfInWashList(user.uid, dataId)
+  setIsWashlist(isSetToWashlist)
+  }
+  const onRemoveToWashList = async () => {
+    await removeFromWashList(user.uid, id.id)
+    const isSetToWashlist =  await chekIfInWashList(user.uid, id.id)
+    setIsWashlist(isSetToWashlist)
+  }
+  const onLoginAlert = () => {
+    setOpenLoginAlert(true)
+  }
+
+  const onCloseAlertLogin = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpenLoginAlert(false);
+  };
+
 
   const changeEpisodes = (e) => {
     setEpisode(e.target.value);
@@ -65,6 +116,29 @@ function AnimeTitle() {
           height={"220px"}
         />
         <Stack>
+          {!isWashlist ? (
+            <Button onClick={ async() => {
+                if (user) {
+                  onSaveToWashlist(data)        
+                } else {
+                  onLoginAlert()
+                }
+                }}>
+                  Добавить в избранное
+            </Button>
+          ) : (
+            <Button onClick={() => {
+              onRemoveToWashList()
+            }}>
+                  Удалить с избранного
+            </Button>
+          )}
+        <Snackbar
+            open={openLoginAlert}
+            autoHideDuration={3000}
+            message="Войдите чтобы добавить в избранное"
+            onClose={onCloseAlertLogin}
+          />
           <Typography sx={{ fontSize: { xs: "16px", sm: "18px" } }}>
             {data.names.ru}
           </Typography>
@@ -156,8 +230,8 @@ function AnimeTitle() {
         height={"100%"}
       />
       <List>
-        Связанные:
-        {data.franchises[0].releases.map((i) => (
+        {data.franchises.releases && 'Связанные:'}
+        {data.franchises.releases && data.franchises[0].releases.map((i) => (
           <ListItemText key={i.id}>
             <Typography onClick={() => {window.scrollTo(0, 0)}} component={RouterLink} to={`/title/${i.id}`}
                 color={'gray'} 

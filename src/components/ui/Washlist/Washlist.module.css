@@ -1,0 +1,19 @@
+.washlist {
+    
+}
+
+.washlistWrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.washlistCard {
+    width: 100px;
+    cursor: pointer;
+}
+
+.washlistCard img {
+    border-radius: 5px;
+    width: 100px;
+}
